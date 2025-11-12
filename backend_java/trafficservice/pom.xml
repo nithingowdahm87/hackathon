@@ -24,6 +24,15 @@
     </properties>
 
     <dependencies>
+<dependency>
+
+    <groupId>org.hibernate.validator</groupId>
+
+    <artifactId>hibernate-validator</artifactId>
+
+    <version>8.0.1.Final</version>
+
+</dependency>
         <!-- Core Spring Web MVC -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,6 +98,15 @@
 
     <dependencyManagement>
         <dependencies>
+<dependency>
+
+    <groupId>org.hibernate.validator</groupId>
+
+    <artifactId>hibernate-validator</artifactId>
+
+    <version>8.0.1.Final</version>
+
+</dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>

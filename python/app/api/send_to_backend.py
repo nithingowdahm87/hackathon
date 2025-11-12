@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-BACKEND_URL = os.getenv("BACKEND_API_URL", "http://localhost:8081/api/predictions")
+BACKEND_URL = os.getenv("BACKEND_API_URL", "http://gateway-service:8081/api/predictions")
 
 def send_results_to_backend(df):
     """

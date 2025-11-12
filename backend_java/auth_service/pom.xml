@@ -19,6 +19,15 @@
     <description>Authentication microservice</description>
 
     <dependencies>
+<dependency>
+
+    <groupId>org.hibernate.validator</groupId>
+
+    <artifactId>hibernate-validator</artifactId>
+
+    <version>8.0.1.Final</version>
+
+</dependency>
         <!-- Core Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

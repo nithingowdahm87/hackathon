@@ -376,7 +376,7 @@ export default function Settings() {
                   <div className="space-y-2">
                     <Label>API Gateway URL</Label>
                     <Input
-                      placeholder="http://localhost:8081/api"
+                      placeholder="http://gateway-service:8081/api"
                       disabled
                     />
                   </div>
