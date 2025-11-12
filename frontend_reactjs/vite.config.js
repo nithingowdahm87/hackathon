@@ -14,7 +14,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://gateway-service:8081/api/',
+        target: 'http://gateway-service:8081',
         changeOrigin: true,
       },
     },
