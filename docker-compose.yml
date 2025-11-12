@@ -33,6 +33,10 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
+      auth-service:
+        condition: service_started
+      alert-service:
+        condition: service_started
       postgres:
         condition: service_healthy
     networks:
@@ -45,7 +49,7 @@ services:
     container_name: auth-service
     command: ["java", "-jar", "auth-service.jar"]
     ports:
-      - "8090:8090"   # Updated to match gateway route URI port
+      - "8090:8090"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
