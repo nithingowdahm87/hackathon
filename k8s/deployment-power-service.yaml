@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: power-service
+  namespace: urbanops
+  labels:
+    app: power-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: power-service
+  template:
+    metadata:
+      labels:
+        app: power-service
+    spec:
+      containers:
+        - name: power-service
+          image: nithingowdahm87/hackathon-power-service:latest
+          ports:
+            - containerPort: 8093
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres.urbanops.svc.cluster.local:5432/urbanops
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD

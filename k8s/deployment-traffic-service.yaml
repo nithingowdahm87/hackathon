@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-service
+  namespace: urbanops
+  labels:
+    app: traffic-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-service
+  template:
+    metadata:
+      labels:
+        app: traffic-service
+    spec:
+      containers:
+        - name: traffic-service
+          image: nithingowdahm87/hackathon-traffic-service:latest
+          ports:
+            - containerPort: 8092
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres.urbanops.svc.cluster.local:5432/urbanops
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
