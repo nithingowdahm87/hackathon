@@ -1,9 +1,0 @@
-backend:
-  type: es
-  es:
-    host: elasticsearch-master
-    port: 9200
-    httpUser: elastic              # from step 5
-    httpPassword: xyHhSxmnUHySOel2  # from step 5
-serviceAccount:
-  create: true
