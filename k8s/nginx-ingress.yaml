@@ -4,18 +4,17 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: 80    # <-- Use the numeric port instead of "http"
-    - name: https
-      port: 443
-      protocol: TCP
-      targetPort: 443   # <-- Use the numeric port instead of "https"
+  type: LoadBalancer
   selector:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/component: controller
-
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 443

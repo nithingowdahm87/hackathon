@@ -14,6 +14,9 @@ public class Alert {
     private String message;
     private String priority;
     private java.time.Instant timestamp;
+    
+    @Column(name = "user_id")
+    private Long userId;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -26,4 +29,6 @@ public class Alert {
     public void setPriority(String priority) { this.priority = priority; }
     public java.time.Instant getTimestamp() { return this.timestamp; }
     public void setTimestamp(java.time.Instant timestamp) { this.timestamp = timestamp; }
+    public Long getUserId() { return this.userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }

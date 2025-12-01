@@ -24,15 +24,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
-        String password = request.get("password");
+    public ResponseEntity<?> login(@RequestBody com.traffic_service.auth_service.dto.AuthRequest request) {
+        String username = request.username();
+        String password = request.password();
 
         Optional<AppUser> userOptional = authService.findByUsername(username);
         if (userOptional.isEmpty()) return ResponseEntity.status(401).body("Invalid username or password");
 
         AppUser user = userOptional.get();
-        if (!passwordEncoder.matches(password, user.getPassword())) return ResponseEntity.status(401).body("Invalid username or password");
+        
+        // Simple plain text password comparison
+        if (!password.equals(user.getPassword())) {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        }
 
         String token = jwtTokenProvider.generateToken(username, user.getRoles());
 
@@ -43,6 +47,16 @@ public class AuthController {
         ));
     }
 
+@GetMapping("/user-id")
+public ResponseEntity<?> getUserId(@RequestParam("username") String username) {
+    Optional<AppUser> userOptional = authService.findByUsername(username);
+    if (userOptional.isEmpty()) {
+        return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+    }
+    
+    AppUser user = userOptional.get();
+    return ResponseEntity.ok(Map.of("userId", user.getId()));
+}
    @PostMapping("/register")
 public ResponseEntity<?> register(@RequestBody Map<String, Object> request) {
     try {

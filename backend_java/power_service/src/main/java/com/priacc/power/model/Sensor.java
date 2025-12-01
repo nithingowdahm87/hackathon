@@ -14,6 +14,9 @@ public class Sensor {
     private Double value;
     private String status;
     private java.time.Instant lastUpdated;
+    
+    @Column(name = "user_id")
+    private Long userId;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -26,4 +29,6 @@ public class Sensor {
     public void setStatus(String status) { this.status = status; }
     public java.time.Instant getLastUpdated() { return this.lastUpdated; }
     public void setLastUpdated(java.time.Instant lastUpdated) { this.lastUpdated = lastUpdated; }
+    public Long getUserId() { return this.userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }

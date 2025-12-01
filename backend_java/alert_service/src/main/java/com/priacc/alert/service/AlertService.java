@@ -12,7 +12,12 @@ public class AlertService {
     public AlertService(AlertRepository repo) { this.repo = repo; }
 
     public Alert create(Alert e) { return repo.save(e); }
-    public List<Alert> list() { return repo.findAll(); }
+    public List<Alert> list(Long userId) { 
+        if (userId != null) {
+            return repo.findByUserId(userId);
+        }
+        return repo.findAll(); 
+    }
     public Optional<Alert> get(Long id) { return repo.findById(id); }
     public Alert update(Alert e) { return repo.save(e); }
     public void delete(Long id) { repo.deleteById(id); }

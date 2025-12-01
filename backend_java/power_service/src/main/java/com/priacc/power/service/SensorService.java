@@ -12,7 +12,12 @@ public class SensorService {
     public SensorService(SensorRepository repo) { this.repo = repo; }
 
     public Sensor create(Sensor e) { return repo.save(e); }
-    public List<Sensor> list() { return repo.findAll(); }
+    public List<Sensor> list(Long userId) { 
+        if (userId != null) {
+            return repo.findByUserId(userId);
+        }
+        return repo.findAll(); 
+    }
     public Optional<Sensor> get(Long id) { return repo.findById(id); }
     public Sensor update(Sensor e) { return repo.save(e); }
     public void delete(Long id) { repo.deleteById(id); }

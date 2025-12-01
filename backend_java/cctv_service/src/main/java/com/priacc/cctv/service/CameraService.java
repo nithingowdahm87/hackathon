@@ -12,7 +12,12 @@ public class CameraService {
     public CameraService(CameraRepository repo) { this.repo = repo; }
 
     public Camera create(Camera e) { return repo.save(e); }
-    public List<Camera> list() { return repo.findAll(); }
+    public List<Camera> list(Long userId) { 
+        if (userId != null) {
+            return repo.findByUserId(userId);
+        }
+        return repo.findAll(); 
+    }
     public Optional<Camera> get(Long id) { return repo.findById(id); }
     public Camera update(Camera e) { return repo.save(e); }
     public void delete(Long id) { repo.deleteById(id); }

@@ -30,9 +30,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             String path = exchange.getRequest().getURI().getPath();
             System.out.println("🔹 Incoming path: " + path);
 
-            // ✅ Skip auth for open endpoints (login and register only)
-            if (path.equals("/api/auth/login") || path.equals("/api/auth/register") || 
-                path.equals("/auth/login") || path.equals("/auth/register")) {
+            // ✅ Skip auth for open authentication endpoints (login, register, etc.)
+            if (path.startsWith("/api/auth") || path.startsWith("/auth")) {
                 return chain.filter(exchange);
             }
 
@@ -51,8 +50,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 // ✅ Forward username header downstream
                 ServerWebExchange mutated = exchange.mutate()
                         .request(r -> r.headers(h -> {
-                            h.add("X-Username", claims.getSubject());
-                            h.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                            h.set("X-Username", claims.getSubject());
+                            h.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
                         }))
                         .build();
 

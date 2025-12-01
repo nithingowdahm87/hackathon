@@ -1,5 +1,22 @@
-// API base URL - Gateway service
-const API_BASE_URL = 'http://13.204.76.185:8081/api';
+// API base URL - loaded dynamically from config.json
+let API_BASE_URL = '/api'; // default fallback
+
+// Load configuration from public/config.json at runtime
+async function loadConfig() {
+  try {
+    const response = await fetch('/config.json');
+    if (response.ok) {
+      const config = await response.json();
+      API_BASE_URL = config.API_URL || '/api';
+      console.log('✅ API configuration loaded:', API_BASE_URL);
+    }
+  } catch (error) {
+    console.warn('⚠️ Failed to load config.json, using default API URL:', API_BASE_URL, error);
+  }
+}
+
+// Initialize config on module load
+loadConfig();
 
 // Get auth token from localStorage
 function getAuthToken() {
@@ -25,16 +42,16 @@ function getUsername() {
 async function apiRequest(endpoint, options = {}) {
   const token = getAuthToken();
   const username = getUsername();
-  
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
-  
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  
+
   if (username) {
     headers['X-Username'] = username;
   }
@@ -50,18 +67,18 @@ async function apiRequest(endpoint, options = {}) {
       if (response.status === 404) {
         return null;
       }
-      
+
       // Handle 401 Unauthorized - token might be expired
       if (response.status === 401) {
         // Clear invalid token
         localStorage.removeItem('urbanopsUser');
         throw new Error('Session expired. Please login again.');
       }
-      
+
       // Safely read error response
       const contentType = response.headers.get('content-type');
       let errorMessage = `API Error: ${response.status}`;
-      
+
       try {
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
@@ -73,7 +90,7 @@ async function apiRequest(endpoint, options = {}) {
         // If reading fails, use status code
         errorMessage = `API Error: ${response.status} ${response.statusText}`;
       }
-      
+
       throw new Error(errorMessage);
     }
 
@@ -87,7 +104,7 @@ async function apiRequest(endpoint, options = {}) {
         return null;
       }
     }
-    
+
     // For non-JSON responses, return text
     return await response.text();
   } catch (error) {
@@ -115,10 +132,10 @@ export async function login(username, password) {
     if (!response.ok) {
       const contentType = response.headers.get('content-type');
       let errorMessage = 'Login failed';
-      
+
       // Clone response to avoid "body already read" error
       const clonedResponse = response.clone();
-      
+
       if (contentType && contentType.includes('application/json')) {
         try {
           const errorData = await response.json();
@@ -135,7 +152,7 @@ export async function login(username, password) {
         // Backend returns plain text for login errors
         errorMessage = await response.text() || errorMessage;
       }
-      
+
       throw new Error(errorMessage);
     }
 
@@ -162,7 +179,7 @@ export async function register(username, password, email = '', roles = ['ROLE_US
     if (!response.ok) {
       const contentType = response.headers.get('content-type');
       let errorMessage = 'Registration failed';
-      
+
       if (contentType && contentType.includes('application/json')) {
         try {
           const errorData = await response.json();
@@ -178,7 +195,7 @@ export async function register(username, password, email = '', roles = ['ROLE_US
       } else {
         errorMessage = await response.text() || errorMessage;
       }
-      
+
       throw new Error(errorMessage);
     }
 

@@ -3,7 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: uocc-postgres
+    container_name: postgres
     environment:
       POSTGRES_DB: urbanops
       POSTGRES_USER: postgres
@@ -11,7 +11,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgresdata:/var/lib/postgresql/data
+      - ./init-data.sql:/docker-entrypoint-initdb.d/init-data.sql
     networks:
       - uocc-network
     healthcheck:
@@ -20,14 +21,107 @@ services:
       timeout: 5s
       retries: 5
 
+  auth-service:
+    build:
+      context: ./backend_java
+      dockerfile: Dockerfile
+    container_name: auth-service
+    command: ["java", "-jar", "auth-service.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8090:8090"
+    networks:
+      - uocc-network
+
+  alert-service:
+    build:
+      context: ./backend_java
+      dockerfile: Dockerfile
+    container_name: alert-service
+    command: ["java", "-jar", "alert-service.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8091:8091"
+    networks:
+      - uocc-network
+
+  traffic-service:
+    build:
+      context: ./backend_java
+      dockerfile: Dockerfile
+    container_name: traffic-service
+    command: ["java", "-jar", "traffic-service.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8092:8092"
+    networks:
+      - uocc-network
+
+  power-service:
+    build:
+      context: ./backend_java
+      dockerfile: Dockerfile
+    container_name: power-service
+    command: ["java", "-jar", "power-service.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8093:8093"
+    networks:
+      - uocc-network
+
+  cctv-service:
+    build:
+      context: ./backend_java
+      dockerfile: Dockerfile
+    container_name: cctv-service
+    command: ["java", "-jar", "cctv-service.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8094:8094"
+    networks:
+      - uocc-network
+
   gateway-service:
     build:
       context: ./backend_java
       dockerfile: Dockerfile
     container_name: gateway-service
     command: ["java", "-jar", "gateway-service.jar"]
-    ports:
-      - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
@@ -40,116 +134,24 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
-    networks:
-      - uocc-network
-
-  auth-service:
-    build:
-      context: ./backend_java
-      dockerfile: Dockerfile
-    container_name: auth-service
-    command: ["java", "-jar", "auth-service.jar"]
     ports:
-      - "8090:8090"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - uocc-network
-
-  traffic-service:
-    build:
-      context: ./backend_java
-      dockerfile: Dockerfile
-    container_name: traffic-service
-    command: ["java", "-jar", "traffic-service.jar"]
-    ports:
-      - "8092:8092"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - uocc-network
-
-  cctv-service:
-    build:
-      context: ./backend_java
-      dockerfile: Dockerfile
-    container_name: cctv-service
-    command: ["java", "-jar", "cctv-service.jar"]
-    ports:
-      - "8094:8094"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - uocc-network
-
-  power-service:
-    build:
-      context: ./backend_java
-      dockerfile: Dockerfile
-    container_name: power-service
-    command: ["java", "-jar", "power-service.jar"]
-    ports:
-      - "8093:8093"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - uocc-network
-
-  alert-service:
-    build:
-      context: ./backend_java
-      dockerfile: Dockerfile
-    container_name: alert-service
-    command: ["java", "-jar", "alert-service.jar"]
-    ports:
-      - "8091:8091"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urbanops
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - "8081:8081"
     networks:
       - uocc-network
 
   python-service:
     build:
       context: ./python
-      dockerfile: Dockerfile
     container_name: python-service
-    ports:
-      - "8000:8000"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/urbanops
+      WEATHER_API_URL: https://api.open-meteo.com/v1/forecast
+      BACKEND_API_URL: http://gateway-service:8081/api/predictions
     depends_on:
       postgres:
         condition: service_healthy
+    ports:
+      - "8000:8000"
     networks:
       - uocc-network
 
@@ -158,10 +160,13 @@ services:
       context: ./frontend_reactjs
       dockerfile: Dockerfile
     container_name: frontend
-    ports:
-      - "80:80"
+    environment:
+      GATEWAY_URL: http://gateway-service:8081
+      NODE_ENV: production
     depends_on:
       - gateway-service
+    ports:
+      - "8085:3000"
     networks:
       - uocc-network
 
@@ -170,6 +175,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
-
-
+  postgresdata:

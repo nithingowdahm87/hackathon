@@ -26,7 +26,8 @@ public class AuthService {
 
         AppUser user = new AppUser();
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
+        // Store password as plain text for simplicity
+        user.setPassword(password);
         user.setEmail(email);
         user.setRoles(roles);
 
@@ -44,11 +45,13 @@ public class AuthService {
         }
         
         AppUser user = userOptional.get();
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        // Plain text password comparison
+        if (!oldPassword.equals(user.getPassword())) {
             return false;
         }
         
-        user.setPassword(passwordEncoder.encode(newPassword));
+        // Store new password as plain text
+        user.setPassword(newPassword);
         userRepository.save(user);
         return true;
     }

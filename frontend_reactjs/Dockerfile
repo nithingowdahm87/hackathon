@@ -1,3 +1,4 @@
+# Stage 1: Build Vite application
 FROM node:20 AS build
 
 # Create app directory and set ownership to non-root user "node"
@@ -16,10 +17,26 @@ COPY --chown=node:node . .
 # Run the build using node as non-root user
 RUN node node_modules/vite/bin/vite.js build
 
-# Stage 2 remains same (nginx serving, no permission issue as nginx runs as root or proper user)
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Stage 2: Production runtime with Node.js Express server
+FROM node:20-alpine
 
+WORKDIR /app
+
+# Copy built static assets
+COPY --from=build /app/dist ./dist
+
+# Copy server files and package.json
+COPY server.js ./
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm install --production --legacy-peer-deps
+
+# Expose port 3000 for Express server
+EXPOSE 3000
+
+# Set environment to production
+ENV NODE_ENV=production
+
+# Run Express server
+CMD ["node", "server.js"]

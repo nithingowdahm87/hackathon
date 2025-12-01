@@ -15,6 +15,9 @@ public class Camera {
     private String status; // online, offline, maintenance
     private String streamUrl;
     private java.time.Instant lastUpdated;
+    
+    @Column(name = "user_id")
+    private Long userId;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -33,5 +36,7 @@ public class Camera {
     
     public java.time.Instant getLastUpdated() { return this.lastUpdated; }
     public void setLastUpdated(java.time.Instant lastUpdated) { this.lastUpdated = lastUpdated; }
+    public Long getUserId() { return this.userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }
 

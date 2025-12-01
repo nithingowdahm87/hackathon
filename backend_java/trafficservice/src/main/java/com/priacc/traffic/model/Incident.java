@@ -14,6 +14,9 @@ public class Incident {
     private String description;
     private String severity;
     private String status;
+    
+    @Column(name = "user_id")
+    private Long userId;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -26,4 +29,6 @@ public class Incident {
     public void setSeverity(String severity) { this.severity = severity; }
     public String getStatus() { return this.status; }
     public void setStatus(String status) { this.status = status; }
+    public Long getUserId() { return this.userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }
