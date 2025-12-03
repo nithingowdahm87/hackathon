@@ -159,14 +159,21 @@ services:
     build:
       context: ./frontend_reactjs
       dockerfile: Dockerfile
+      args:
+        VITE_BASE_URL: "/"
+        VITE_API_URL: "http://gateway-service:8081"
+        FRONTEND_PORT: 8085
     container_name: frontend
     environment:
       GATEWAY_URL: http://gateway-service:8081
       NODE_ENV: production
+      PORT: 8085
+      VITE_BASE_URL: "/"
+      VITE_API_URL: http://gateway-service:8081
     depends_on:
       - gateway-service
     ports:
-      - "8085:3000"
+      - "8085:8085"
     networks:
       - uocc-network
 
