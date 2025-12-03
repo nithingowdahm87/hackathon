@@ -26,7 +26,7 @@ function MapUpdater({ center, zoom }) {
 
 export function CityMap({
   markers = [],
-  center = [40.7128, -74.0060],
+  center = [12.9716, 77.5946], // Bengaluru, India
   zoom = 12,
   className,
 }) {

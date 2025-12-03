@@ -88,14 +88,14 @@ export default function IncidentDetail() {
             markers={[
               {
                 id: incident.id,
-                position: [incident.location.lat || 0, incident.location.lng || 0],
+                position: [incident.location.lat || 12.9716, incident.location.lng || 77.5946], // Bengaluru fallback
                 title: incident.title,
                 description: incident.description,
                 type: incident.type,
                 status: incident.severity,
               },
             ]}
-            center={[incident.location.lat || 0, incident.location.lng || 0]}
+            center={[incident.location.lat || 12.9716, incident.location.lng || 77.5946]} // Bengaluru fallback
             zoom={15}
           />
         )}

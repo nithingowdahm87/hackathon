@@ -38,6 +38,15 @@ async def load_model():
 
         model = None
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Kubernetes probes"""
+    return {
+        "status": "healthy",
+        "service": "python-traffic-prediction",
+        "model_loaded": model is not None
+    }
+
 @app.post("/predict", response_model=PredictResponse)
 async def predict(req: PredictRequest):
     global model

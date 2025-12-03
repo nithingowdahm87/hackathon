@@ -55,9 +55,21 @@ export function IncidentDialog({ open, onOpenChange, incident, onSuccess }) {
 
   // 🛰 Auto-detect user's current location when creating a new incident
   useEffect(() => {
-    if (!incident && navigator.geolocation) {
+    if (!incident && navigator.geolocation && open) {
+      const timeoutId = setTimeout(() => {
+        // Fallback to Bengaluru if geolocation takes too long
+        if (!formData.location) {
+          setFormData((prev) => ({
+            ...prev,
+            location: 'Bengaluru, India',
+          }));
+          console.log('⏱️ Geolocation timeout, defaulting to Bengaluru, India');
+        }
+      }, 5000); // 5 second timeout
+
       navigator.geolocation.getCurrentPosition(
         async (position) => {
+          clearTimeout(timeoutId);
           const { latitude, longitude } = position.coords;
           try {
             const response = await fetch(
@@ -70,22 +82,39 @@ export function IncidentDialog({ open, onOpenChange, incident, onSuccess }) {
               data.address?.town ||
               data.address?.village ||
               data.display_name ||
-              'Unknown Location';
+              'Bengaluru, India';
 
             setFormData((prev) => ({
               ...prev,
               location: detectedLocation,
             }));
+            console.log('✅ Location detected:', detectedLocation);
           } catch (error) {
             console.error('Error fetching location:', error);
+            setFormData((prev) => ({
+              ...prev,
+              location: 'Bengaluru, India',
+            }));
           }
         },
         (error) => {
-          console.warn('Geolocation not available or permission denied:', error);
+          clearTimeout(timeoutId);
+          console.warn('Geolocation not available or permission denied:', error.code, error.message);
+          // Set fallback location
+          setFormData((prev) => ({
+            ...prev,
+            location: 'Bengaluru, India',
+          }));
+        },
+        {
+          timeout: 5000,
+          enableHighAccuracy: false, // Faster response
         }
       );
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [incident]);
+  }, [incident, open]);
 
   // ✅ Submit form handler
   const handleSubmit = async (e) => {

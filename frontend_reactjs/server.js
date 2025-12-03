@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 const GATEWAY_URL = process.env.GATEWAY_URL || 'http://gateway-service:8081';
 
 // Security headers with CSP configured for Vite apps
-app.use(helmet({
+const helmetOptions = {
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
@@ -27,7 +27,13 @@ app.use(helmet({
             frameSrc: ["'none'"],
         },
     },
-}));
+    // Disable HSTS when we are serving plain HTTP (e.g., direct EC2 access).
+    // Set ENABLE_HSTS=true to re-enable when traffic is terminated over HTTPS.
+    hsts: process.env.ENABLE_HSTS === 'true' ? undefined : false,
+    crossOriginEmbedderPolicy: false,
+};
+
+app.use(helmet(helmetOptions));
 
 // Enable gzip compression
 app.use(compression());

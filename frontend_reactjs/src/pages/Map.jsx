@@ -45,7 +45,7 @@ export default function Map() {
         ...markers,
         ...incidents.map((inc) => ({
           id: inc.id,
-          position: [inc.location?.lat || 0, inc.location?.lng || 0],
+          position: [inc.location?.lat || 12.9716, inc.location?.lng || 77.5946], // Bengaluru fallback
           title: inc.title,
           description: inc.description,
           type: 'incident',
@@ -59,7 +59,7 @@ export default function Map() {
         ...markers,
         ...sensors.map((sensor) => ({
           id: sensor.id,
-          position: [sensor.location?.lat || 0, sensor.location?.lng || 0],
+          position: [sensor.location?.lat || 12.9716, sensor.location?.lng || 77.5946], // Bengaluru fallback
           title: sensor.name,
           description: `${sensor.type} sensor`,
           type: 'sensor',
@@ -73,7 +73,7 @@ export default function Map() {
         ...markers,
         ...cameras.map((cam) => ({
           id: cam.id,
-          position: [cam.location?.lat || 0, cam.location?.lng || 0],
+          position: [cam.location?.lat || 12.9716, cam.location?.lng || 77.5946], // Bengaluru fallback
           title: cam.name,
           description: 'CCTV Camera',
           type: 'camera',
@@ -119,7 +119,7 @@ export default function Map() {
           </TabsList>
 
           <TabsContent value={activeTab} className="mt-6">
-            <CityMap markers={getMapMarkers()} center={[40.7128, -74.006]} zoom={12} />
+            <CityMap markers={getMapMarkers()} center={[12.9716, 77.5946]} zoom={12} /> {/* Bengaluru, India */}
           </TabsContent>
         </Tabs>
 

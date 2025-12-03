@@ -80,21 +80,21 @@ INSERT INTO user_roles (user_id, role) VALUES
 -- Insert Incidents
 -- Admin sees everything (but for now assigning some specifically)
 INSERT INTO incidents (description, location, status, severity, user_id) VALUES
-('Traffic Accident on Main St', 'Main St & 5th Ave', 'ACTIVE', 'HIGH', 1),
-('Signal Failure Uptown', '8th Ave & 52nd St', 'ACTIVE', 'CRITICAL', 1),
-('Illegal Parking Crackdown', 'Zone A - Downtown', 'ACTIVE', 'LOW', 2),
-('Pothole Reported', 'Elm St', 'PENDING', 'LOW', 2),
-('Vehicle Breakdown', 'Highway 101 Exit 5', 'ACTIVE', 'MEDIUM', 3),
-('Road Construction', 'City Center', 'PLANNED', 'MEDIUM', 4),
-('VIP Convoy Escort', 'Airport Expressway', 'SCHEDULED', 'HIGH', 5);
+('Traffic Accident on MG Road', 'MG Road, Bengaluru', 'ACTIVE', 'HIGH', 1),
+('Signal Failure in Koramangala', 'Koramangala 5th Block, Bengaluru', 'ACTIVE', 'CRITICAL', 1),
+('Illegal Parking Crackdown', 'Indiranagar, Bengaluru', 'ACTIVE', 'LOW', 2),
+('Pothole Reported', 'Whitefield Main Road, Bengaluru', 'PENDING', 'LOW', 2),
+('Vehicle Breakdown', 'Outer Ring Road, Bengaluru', 'ACTIVE', 'MEDIUM', 3),
+('Road Construction', 'Hosur Road, Bengaluru', 'PLANNED', 'MEDIUM', 4),
+('VIP Convoy Escort', 'Airport Road, Bengaluru', 'SCHEDULED', 'HIGH', 5);
 
 -- Insert Alerts
 INSERT INTO alerts (title, message, priority, timestamp, user_id) VALUES
-('Congestion Downtown', 'Traffic flow below 20km/h in Downtown', 'HIGH', NOW() - INTERVAL '00:45:00', 1),
+('Congestion in Whitefield', 'Traffic flow below 20km/h in Whitefield', 'HIGH', NOW() - INTERVAL '00:45:00', 1),
 ('System Maintenance', 'Scheduled maintenance at midnight', 'LOW', NOW() - INTERVAL '02:30:00', 1),
-('Unauthorized Entry', 'Unauthorized vehicle in Zone A', 'HIGH', NOW() - INTERVAL '01:15:00', 2),
-('Weather Advisory', 'Storm expected this evening', 'MEDIUM', NOW() - INTERVAL '03:20:00', 4),
-('Power Surge', 'Substation voltage exceeded 110%', 'CRITICAL', NOW() - INTERVAL '00:25:00', 5);
+('Unauthorized Entry', 'Unauthorized vehicle in Electronic City', 'HIGH', NOW() - INTERVAL '01:15:00', 2),
+('Weather Advisory', 'Heavy rain expected this evening', 'MEDIUM', NOW() - INTERVAL '03:20:00', 4),
+('Power Surge', 'Substation voltage exceeded 110% in Hebbal', 'CRITICAL', NOW() - INTERVAL '00:25:00', 5);
 
 -- Insert Sensors
 INSERT INTO sensors (type, value, status, last_updated, user_id) VALUES
@@ -110,7 +110,7 @@ INSERT INTO sensors (type, value, status, last_updated, user_id) VALUES
 
 -- Insert Cameras
 INSERT INTO cameras (name, location, status, stream_url, last_updated, user_id) VALUES
-('Cam-01', 'Main St Junction', 'ONLINE', 'rtsp://cam1', NOW(), 1),
-('Cam-02', 'Broadway', 'ONLINE', 'rtsp://cam2', NOW(), 2),
-('Cam-03', 'Highway 101', 'OFFLINE', 'rtsp://cam3', NOW(), 3),
-('Cam-04', 'City Center', 'ONLINE', 'rtsp://cam4', NOW(), 4);
+('Cam-01', 'MG Road Junction, Bengaluru', 'ONLINE', 'rtsp://cam1', NOW(), 1),
+('Cam-02', 'Koramangala, Bengaluru', 'ONLINE', 'rtsp://cam2', NOW(), 2),
+('Cam-03', 'Outer Ring Road, Bengaluru', 'OFFLINE', 'rtsp://cam3', NOW(), 3),
+('Cam-04', 'Whitefield, Bengaluru', 'ONLINE', 'rtsp://cam4', NOW(), 4);
