@@ -31,6 +31,10 @@ const helmetOptions = {
     // Set ENABLE_HSTS=true to re-enable when traffic is terminated over HTTPS.
     hsts: process.env.ENABLE_HSTS === 'true' ? undefined : false,
     crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: process.env.ENABLE_COOP === 'true' ? undefined : false,
+    originAgentCluster: process.env.ENABLE_ORIGIN_AGENT_CLUSTER === 'true'
+        ? undefined
+        : false,
 };
 
 app.use(helmet(helmetOptions));
